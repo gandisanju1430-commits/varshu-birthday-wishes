@@ -11,6 +11,10 @@ A personalized birthday celebration with wishes, memory photos, a cake surprise,
 
 The server uses the `PORT` environment variable when provided by a hosting service.
 
+## Live website
+
+Visit [Varshu's birthday surprise](https://gandisanju1430-commits.github.io/varshu-birthday-wishes/).
+
 ## Deploy on GitHub Pages
 
 Create a GitHub repository for this project and push the project files to its `main` branch. The included GitHub Actions workflow publishes the `public/` folder. In the repository, open **Settings → Pages** and set the build and deployment source to **GitHub Actions**. After the workflow finishes, share the public URL shown in its deployment environment. The birthday page and its photos are static and do not need the Node server to run on GitHub Pages.
