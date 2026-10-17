@@ -223,22 +223,15 @@
             place-items: center;
             overflow: hidden;
             padding: 28px;
-            background-color: #101025;
-            background-image:
-                radial-gradient(ellipse at 50% 110%, rgba(133,74,133,.36), transparent 60%),
-                linear-gradient(180deg, rgba(8,10,29,.70), rgba(13,13,37,.82)),
-                url("memories/Snapchat-618683686.jpg");
-            background-position: center;
-            background-size: cover;
+            background: #000;
             color: #fff8fb;
             text-align: center;
+            animation: ending-fade-to-black 1.8s ease both;
         }
-        .ending-stage::before, .ending-stage::after { position: absolute; inset: 0; pointer-events: none; content: ""; }
-        .ending-stage::before { background-image: radial-gradient(2px 2px at 12% 20%, #fff 60%, transparent), radial-gradient(1px 1px at 79% 18%, #fff 60%, transparent), radial-gradient(2px 2px at 67% 72%, #ffe3ef 60%, transparent), radial-gradient(1px 1px at 28% 76%, #fff 60%, transparent), radial-gradient(1px 1px at 89% 56%, #fff 60%, transparent), radial-gradient(2px 2px at 42% 34%, #ffe3ef 60%, transparent); opacity: .8; }
-        .ending-stage::after { background: radial-gradient(ellipse at center, transparent 18%, rgba(8,10,29,.58) 100%); }
         .ending-content { position: relative; z-index: 1; width: min(100%, 760px); }
-        .ending-line { margin: 0; color: #fff8fb; font-family: 'Dancing Script', cursive; font-size: clamp(2.5rem, 8vw, 5rem); line-height: 1.25; text-shadow: 0 3px 28px rgba(0,0,0,.45); opacity: 0; transform: translateY(12px); transition: opacity 1.8s ease, transform 1.8s ease; }
-        .ending-stage.is-revealed .ending-line { opacity: 1; transform: translateY(0); }
+        .ending-line { margin: 0; color: #fff8fb; font-family: 'Dancing Script', cursive; font-size: clamp(2.2rem, 7vw, 4rem); line-height: 1.35; text-shadow: 0 3px 28px rgba(0,0,0,.45); opacity: 0; transform: translateY(12px); transition: opacity 1.8s ease, transform 1.8s ease; }
+        .ending-final-line { margin-top: 30px; font-size: clamp(2rem, 6vw, 3.3rem); }
+        .ending-stage.is-revealed #ending-line, .ending-stage.is-final-revealed #ending-final-line { opacity: 1; transform: translateY(0); }
         .ending-replay { margin-top: 34px; padding: 10px 17px; border: 1px solid rgba(255,255,255,.45); border-radius: 999px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; font: inherit; font-size: .84rem; letter-spacing: .02em; opacity: 0; transition: opacity 700ms ease, background 180ms ease; }
         .ending-replay.is-visible { opacity: 1; }
         .ending-replay:hover { background: rgba(255,255,255,.2); }
@@ -260,6 +253,11 @@
             0% { opacity: 0; transform: scale(.35) rotate(-8deg); }
             70% { opacity: 1; transform: scale(1.12) rotate(2deg); }
             100% { opacity: 1; transform: scale(1) rotate(0); }
+        }
+
+        @keyframes ending-fade-to-black {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         @media (max-width: 480px) {
@@ -465,8 +463,9 @@
             </section>
 
             <section class="ending-stage" id="ending-stage" aria-label="A final birthday message" hidden>
-                <div class="ending-content">
-                    <p class="ending-line" id="ending-line">No matter how many years pass, I’ll always be grateful we found our way back to each other.</p>
+                <div class="ending-content" aria-live="polite">
+                    <p class="ending-line" id="ending-line">You reached the end of this website… but I hope this isn't the end of the memories we make.</p>
+                    <p class="ending-line ending-final-line" id="ending-final-line" hidden>Happy birthday, MESSY. I'm glad you're in my life. ❤️</p>
                     <button class="ending-replay" id="ending-replay" type="button" hidden>Read this again anytime</button>
                 </div>
             </section>
@@ -497,6 +496,7 @@
         let candleTimer;
         let letterTimers = [];
         let endingReplayTimer;
+        let endingRevealTimers = [];
         let birthdayMusicGain;
 
         function startCakeSurprise() {
@@ -578,16 +578,26 @@
         const endingReplayButton = document.getElementById('ending-replay');
         function startEnding() {
             window.clearTimeout(endingReplayTimer);
+            endingRevealTimers.forEach((timer) => window.clearTimeout(timer));
+            endingRevealTimers = [];
             endingStage.classList.remove('is-revealed');
+            endingStage.classList.remove('is-final-revealed');
+            document.getElementById('ending-final-line').hidden = true;
             endingReplayButton.hidden = true;
             endingReplayButton.classList.remove('is-visible');
             showStage(endingStage);
             fadeBirthdayMusic();
-            window.requestAnimationFrame(() => endingStage.classList.add('is-revealed'));
-            endingReplayTimer = window.setTimeout(() => {
+            const fadeDuration = reduceMotion ? 0 : 1800;
+            const revealFirstLine = window.setTimeout(() => endingStage.classList.add('is-revealed'), fadeDuration);
+            const revealFinalLine = window.setTimeout(() => {
+                document.getElementById('ending-final-line').hidden = false;
+                window.requestAnimationFrame(() => endingStage.classList.add('is-final-revealed'));
+            }, fadeDuration + (reduceMotion ? 400 : 3000));
+            const revealReplayButton = window.setTimeout(() => {
                 endingReplayButton.hidden = false;
                 window.requestAnimationFrame(() => endingReplayButton.classList.add('is-visible'));
-            }, reduceMotion ? 0 : 4800);
+            }, fadeDuration + (reduceMotion ? 1200 : 6200));
+            endingRevealTimers.push(revealFirstLine, revealFinalLine, revealReplayButton);
         }
 
         toEndingButton.addEventListener('click', startEnding);
