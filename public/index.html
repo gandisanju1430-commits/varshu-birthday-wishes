@@ -82,9 +82,10 @@
         .archery-target-heart { fill: #ef4772; filter: drop-shadow(0 0 14px rgba(239,71,114,.5)); transform-box: fill-box; transform-origin: center; }
         .archery-target-heart.heart-burst { animation: heart-burst 450ms ease-out forwards; }
         .archery-aim-line { stroke: rgba(199,91,122,.5); stroke-width: 3; stroke-dasharray: 7 9; }
-        .archery-bow { cursor: grab; outline: none; }
-        .archery-bow:active { cursor: grabbing; }
-        .archery-bow:focus-visible .bow-curve { filter: drop-shadow(0 0 8px #c83f60); }
+        .archery-arrow-drag { cursor: grab; outline: none; touch-action: none; }
+        .archery-arrow-drag:active { cursor: grabbing; }
+        .archery-arrow-drag:focus-visible .archery-arrow { filter: drop-shadow(0 0 7px #c83f60); }
+        .archery-arrow-hitbox { stroke: transparent; stroke-width: 28; pointer-events: stroke; }
         .bow-curve { fill: none; stroke: #9d563b; stroke-width: 11; stroke-linecap: round; }
         .bow-string { stroke: #77515b; stroke-width: 2; }
         .bow-grip { fill: #d89162; stroke: #8d4d37; stroke-width: 3; }
@@ -338,11 +339,11 @@
             <section class="stage-section archery-stage" id="archery-stage" aria-labelledby="archery-title" hidden>
                 <div class="hearts-box" aria-hidden="true">💘🏹💖</div>
                 <h1 class="stage-heading" id="archery-title">A little love is waiting for you 💝</h1>
-                <p class="archery-intro">Drag the bow toward the floating heart to send it a little love. You can also use the arrow keys, then press Enter. 💕</p>
+                <p class="archery-intro">Pull the arrow back from the bow, then let go. Watch it fly straight into the floating heart 💕</p>
                 <div class="archery-playfield" id="archery-playfield">
                     <svg class="archery-scene" id="archery-scene" viewBox="0 0 720 360" role="group" aria-labelledby="archery-svg-title archery-svg-desc">
                         <title id="archery-svg-title">A heart and a bow-and-arrow love game</title>
-                        <desc id="archery-svg-desc">Move the bow onto the glowing heart. Drag it with a pointer or focus it and use the arrow keys.</desc>
+                        <desc id="archery-svg-desc">Pull the arrow back from the bow and release it to send it flying into the glowing heart. Keyboard users can focus the arrow, press the left arrow key to pull back, and press Enter to release.</desc>
                         <defs>
                             <marker id="archery-arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
                                 <path d="M 0 0 L 10 5 L 0 10 z" fill="#77515b"></path>
@@ -353,19 +354,21 @@
                         <g id="archery-target" aria-hidden="true">
                             <path class="archery-target-heart" id="archery-target-heart" d="M0 36 C-10 26 -38 5 -38 -14 C-38 -39 -8 -43 0 -19 C8 -43 38 -39 38 -14 C38 5 10 26 0 36Z" transform="translate(585 128)"></path>
                         </g>
-                        <line class="archery-aim-line" id="archery-aim-line" x1="145" y1="260" x2="540" y2="142"></line>
-                        <line class="archery-arrow" id="archery-arrow" x1="145" y1="260" x2="535" y2="143"></line>
-                        <g class="archery-bow" id="archery-bow" transform="translate(125 260)" tabindex="0" role="slider" aria-label="Drag the bow toward the floating heart" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Bow ready; aim at the heart">
+                        <line class="archery-aim-line" id="archery-aim-line" x1="165" y1="260" x2="540" y2="142"></line>
+                        <g class="archery-bow" id="archery-bow" transform="translate(125 260)" aria-hidden="true">
                             <path class="bow-curve" d="M18 -60 Q78 0 18 60"></path>
-                            <line class="bow-string" x1="18" y1="-60" x2="18" y2="60"></line>
+                            <path class="bow-string" id="bow-string" d="M18 -60 Q18 0 18 60"></path>
                             <rect class="bow-grip" x="7" y="-13" width="22" height="26" rx="8"></rect>
-                            <text class="archery-svg-label" x="28" y="91">DRAG ME</text>
+                        </g>
+                        <g class="archery-arrow-drag" id="archery-arrow-drag" transform="translate(145 260) rotate(-17)" tabindex="0" role="slider" aria-label="Pull back the arrow and release it to hit the heart" aria-describedby="archery-svg-desc" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Arrow ready; pull it back">
+                            <line class="archery-arrow-hitbox" x1="-8" y1="0" x2="70" y2="0"></line>
+                            <line class="archery-arrow" id="archery-arrow" x1="0" y1="0" x2="64" y2="0"></line>
                         </g>
                     </svg>
                     <div id="love-fall-layer" aria-hidden="true"></div>
                 </div>
                 <p class="archery-status" id="archery-status" role="status" aria-live="polite">The heart is waiting—aim your bow at it 💗</p>
-                <p class="archery-hint">Drag the bow all the way to the heart to make it burst.</p>
+                <p class="archery-hint">Drag the arrow backward, then release to shoot. Keyboard: ← to pull back, Enter to shoot.</p>
             </section>
 
             <section class="hero-celebration" id="birthday-stage" aria-label="Birthday celebration" hidden>
@@ -573,9 +576,10 @@
         let endingRevealTimers = [];
         let birthdayMusicGain;
         let archeryAdvanceTimer;
-        let bowPosition = { x: 125, y: 260 };
-        let bowDragOffset = { x: 0, y: 0 };
-        let bowDragging = false;
+        let arrowPull = 0;
+        let arrowDragStart = null;
+        let arrowPullAtStart = 0;
+        let arrowDragging = false;
         let archeryComplete = false;
 
         function startCakeSurprise() {
@@ -606,38 +610,26 @@
 
         const archeryScene = document.getElementById('archery-scene');
         const archeryBow = document.getElementById('archery-bow');
+        const archeryArrowDrag = document.getElementById('archery-arrow-drag');
         const archeryTargetHeart = document.getElementById('archery-target-heart');
         const archeryArrow = document.getElementById('archery-arrow');
         const archeryAimLine = document.getElementById('archery-aim-line');
+        const bowString = document.getElementById('bow-string');
         const archeryStatus = document.getElementById('archery-status');
         const loveFallLayer = document.getElementById('love-fall-layer');
         const heartPosition = { x: 585, y: 128 };
+        const arrowOrigin = { x: 145, y: 260 };
+        const arrowDirection = { x: Math.cos(-17 * Math.PI / 180), y: Math.sin(-17 * Math.PI / 180) };
+        const arrowAngle = -17;
 
-        function updateBowPosition(x, y) {
-            bowPosition = {
-                x: Math.max(55, Math.min(665, x)),
-                y: Math.max(65, Math.min(310, y))
-            };
-            archeryBow.setAttribute('transform', `translate(${bowPosition.x} ${bowPosition.y})`);
-            const dx = heartPosition.x - bowPosition.x;
-            const dy = heartPosition.y - bowPosition.y;
-            const distance = Math.hypot(dx, dy) || 1;
-            const arrowStart = { x: bowPosition.x + 20, y: bowPosition.y };
-            const arrowEnd = {
-                x: heartPosition.x - dx / distance * 47,
-                y: heartPosition.y - dy / distance * 47
-            };
-            archeryArrow.setAttribute('x1', arrowStart.x);
-            archeryArrow.setAttribute('y1', arrowStart.y);
-            archeryArrow.setAttribute('x2', arrowEnd.x);
-            archeryArrow.setAttribute('y2', arrowEnd.y);
-            archeryAimLine.setAttribute('x1', arrowStart.x);
-            archeryAimLine.setAttribute('y1', arrowStart.y);
-            archeryAimLine.setAttribute('x2', heartPosition.x - dx / distance * 55);
-            archeryAimLine.setAttribute('y2', heartPosition.y - dy / distance * 55);
-            const progress = Math.round(Math.max(0, 1 - distance / 545) * 100);
-            archeryBow.setAttribute('aria-valuenow', progress);
-            archeryBow.setAttribute('aria-valuetext', `${progress}% of the way to the heart`);
+        function updateArrowPull(pull) {
+            arrowPull = Math.max(0, Math.min(100, pull));
+            const x = arrowOrigin.x - arrowDirection.x * arrowPull;
+            const y = arrowOrigin.y - arrowDirection.y * arrowPull;
+            archeryArrowDrag.setAttribute('transform', `translate(${x} ${y}) rotate(${arrowAngle})`);
+            bowString.setAttribute('d', `M18 -60 Q${x - 125} ${y - 260} 18 60`);
+            archeryArrowDrag.setAttribute('aria-valuenow', Math.round(arrowPull));
+            archeryArrowDrag.setAttribute('aria-valuetext', `Arrow pulled back ${Math.round(arrowPull)} percent`);
         }
 
         function getArcheryPoint(event) {
@@ -649,15 +641,7 @@
             return point.matrixTransform(matrix.inverse());
         }
 
-        function releaseArrow() {
-            if (archeryComplete) return;
-            const distance = Math.hypot(heartPosition.x - bowPosition.x, heartPosition.y - bowPosition.y);
-            if (distance > 72) {
-                archeryStatus.textContent = 'A little closer—drag the bow right onto the floating heart 💞';
-                return;
-            }
-
-            archeryComplete = true;
+        function burstHeart() {
             archeryTargetHeart.classList.add('heart-burst');
             archeryStatus.textContent = 'Bullseye! Sending a little love your way 💖';
             const symbols = ['💖', '💕', '💗', '❤️', '💘', '💝'];
@@ -679,56 +663,87 @@
             }, reduceMotion ? 250 : 2600);
         }
 
-        archeryBow.addEventListener('pointerdown', (event) => {
+        function releaseArrow() {
+            if (archeryComplete) return;
+            archeryComplete = true;
+            archeryArrowDrag.setAttribute('aria-disabled', 'true');
+            archeryStatus.textContent = 'You let go—the arrow is flying to the heart! 💘';
+            const startX = arrowOrigin.x - arrowDirection.x * arrowPull;
+            const startY = arrowOrigin.y - arrowDirection.y * arrowPull;
+            const endX = heartPosition.x - arrowDirection.x * 64;
+            const endY = heartPosition.y - arrowDirection.y * 64;
+            const duration = reduceMotion ? 0 : 850;
+            const startTime = window.performance.now();
+
+            function flyArrow(now) {
+                const progress = duration ? Math.min(1, (now - startTime) / duration) : 1;
+                const easedProgress = 1 - (1 - progress) ** 2;
+                const x = startX + (endX - startX) * easedProgress;
+                const y = startY + (endY - startY) * easedProgress;
+                archeryArrowDrag.setAttribute('transform', `translate(${x} ${y}) rotate(${arrowAngle})`);
+                if (progress < 1) {
+                    window.requestAnimationFrame(flyArrow);
+                } else {
+                    burstHeart();
+                }
+            }
+
+            window.requestAnimationFrame(flyArrow);
+        }
+
+        archeryArrowDrag.addEventListener('pointerdown', (event) => {
             if (archeryComplete) return;
             const point = getArcheryPoint(event);
             if (!point) return;
             event.preventDefault();
-            bowDragging = true;
-            bowDragOffset = { x: bowPosition.x - point.x, y: bowPosition.y - point.y };
-            archeryBow.setPointerCapture(event.pointerId);
-            archeryStatus.textContent = 'Keep dragging the bow toward the heart 💘';
+            arrowDragging = true;
+            arrowDragStart = point;
+            arrowPullAtStart = arrowPull;
+            archeryArrowDrag.setPointerCapture(event.pointerId);
+            archeryStatus.textContent = 'Pull back the arrow, then let go to shoot 💘';
         });
 
-        archeryBow.addEventListener('pointermove', (event) => {
-            if (!bowDragging) return;
+        archeryArrowDrag.addEventListener('pointermove', (event) => {
+            if (!arrowDragging || !arrowDragStart) return;
             const point = getArcheryPoint(event);
-            if (point) updateBowPosition(point.x + bowDragOffset.x, point.y + bowDragOffset.y);
+            if (!point) return;
+            const movementX = point.x - arrowDragStart.x;
+            const movementY = point.y - arrowDragStart.y;
+            const pullMovement = -(movementX * arrowDirection.x + movementY * arrowDirection.y);
+            updateArrowPull(arrowPullAtStart + pullMovement);
         });
 
-        function finishBowDrag(event) {
-            if (!bowDragging) return;
-            bowDragging = false;
-            if (archeryBow.hasPointerCapture(event.pointerId)) archeryBow.releasePointerCapture(event.pointerId);
+        function finishArrowDrag(event) {
+            if (!arrowDragging) return;
+            arrowDragging = false;
+            arrowDragStart = null;
+            if (archeryArrowDrag.hasPointerCapture(event.pointerId)) archeryArrowDrag.releasePointerCapture(event.pointerId);
             releaseArrow();
         }
 
-        archeryBow.addEventListener('pointerup', finishBowDrag);
-        archeryBow.addEventListener('pointercancel', finishBowDrag);
-        archeryBow.addEventListener('keydown', (event) => {
-            const step = event.shiftKey ? 32 : 16;
-            const moves = {
-                ArrowUp: [0, -step],
-                ArrowDown: [0, step],
-                ArrowLeft: [-step, 0],
-                ArrowRight: [step, 0]
-            };
-            if (event.key in moves) {
+        archeryArrowDrag.addEventListener('pointerup', finishArrowDrag);
+        archeryArrowDrag.addEventListener('pointercancel', finishArrowDrag);
+        archeryArrowDrag.addEventListener('keydown', (event) => {
+            const step = event.shiftKey ? 20 : 10;
+            if (event.key === 'ArrowLeft') {
                 event.preventDefault();
-                const [dx, dy] = moves[event.key];
-                updateBowPosition(bowPosition.x + dx, bowPosition.y + dy);
-                archeryStatus.textContent = 'Keep aiming the bow at the floating heart 💘';
+                updateArrowPull(arrowPull + step);
+                archeryStatus.textContent = 'Arrow drawn—press Enter to release it at the heart 💘';
+            } else if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                updateArrowPull(arrowPull - step);
+                archeryStatus.textContent = 'Arrow tension adjusted. Press Enter to shoot 💘';
             } else if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
                 releaseArrow();
             } else if (event.key === 'Home') {
                 event.preventDefault();
-                updateBowPosition(125, 260);
-                archeryStatus.textContent = 'The heart is waiting—aim your bow at it 💗';
+                updateArrowPull(0);
+                archeryStatus.textContent = 'Pull the arrow back, then let go to shoot 💗';
             }
         });
 
-        updateBowPosition(bowPosition.x, bowPosition.y);
+        updateArrowPull(0);
 
         function showStage(stage) {
             pageStages.forEach((pageStage) => {
