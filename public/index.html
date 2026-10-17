@@ -1,0 +1,713 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffe5ec">
+    <title>Happy Birthday to My Favorite Person! 🎂</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js" defer></script>
+    <style>
+        :root {
+            color-scheme: light;
+            --primary-pink: #ff758c;
+            --secondary-pink: #ff7eb3;
+            --bg-gradient: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 100%);
+            --glass-bg: rgba(255, 255, 255, 0.58);
+            --glass-border: rgba(255, 255, 255, 0.75);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 28px 16px;
+            overflow-x: hidden;
+            background: var(--bg-gradient);
+            color: #4a3d42;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .main-card {
+            width: min(100%, 760px);
+            margin: 4vh auto;
+            padding: clamp(22px, 5vw, 42px);
+            border: 1px solid var(--glass-border);
+            border-radius: 26px;
+            background: var(--glass-bg);
+            box-shadow: 0 18px 55px rgba(174, 67, 100, 0.16);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            text-align: center;
+            animation: fade-in 800ms ease both;
+        }
+
+        [hidden] { display: none !important; }
+
+        .gate-card {
+            width: min(100%, 440px);
+            margin: 0 auto;
+            padding: 12px 0 4px;
+        }
+
+        .gate-icon { margin-bottom: 12px; font-size: 3.5rem; }
+        .gate-title { margin-bottom: 12px; font-family: 'Poppins', sans-serif; font-size: clamp(1.55rem, 6vw, 2rem); }
+        .gate-copy { margin: 0 auto 22px; color: #715861; line-height: 1.7; }
+
+        .birthday-form { display: grid; gap: 12px; }
+
+        .birthday-input {
+            width: 100%;
+            min-height: 52px;
+            padding: 10px 14px;
+            border: 1px solid #efb1c0;
+            border-radius: 13px;
+            background: rgba(255, 255, 255, 0.85);
+            color: #493840;
+            font: inherit;
+            font-size: 1rem;
+        }
+
+        .birthday-input:focus-visible { outline: 3px solid rgba(217, 78, 113, 0.35); border-color: #d94e71; }
+        .gate-error { min-height: 1.5em; margin: 0; color: #a52f4b; font-size: 0.88rem; }
+        .celebration { text-align: center; }
+        .hero-celebration { padding: clamp(16px, 5vw, 40px) 0 30px; }
+        .hero-sparkles { margin-bottom: 6px; font-size: clamp(2.5rem, 10vw, 4.5rem); animation: pulse 700ms ease-in-out infinite alternate; }
+        .hero-title {
+            margin: 0;
+            color: #c83f60;
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(3rem, 11vw, 6.2rem);
+            line-height: 1.03;
+            text-shadow: 0 5px 0 rgba(255,255,255,.55);
+            animation: birthday-pop 900ms cubic-bezier(.2, 1.4, .4, 1) both;
+        }
+
+        .hero-subtitle { margin: 12px 0 0; color: #a33a58; font-size: clamp(1rem, 4vw, 1.35rem); font-weight: 700; letter-spacing: .06em; }
+        .stage-section { padding: 22px 0 30px; animation: fade-in 750ms ease both; }
+        .stage-heading { margin: 0 0 18px; color: #c83f60; font-size: clamp(1.35rem, 5vw, 1.8rem); }
+        .forward-button { margin-top: 24px; }
+        .music-status { min-height: 1.5em; margin: 10px 0 0; color: #79505e; font-size: .85rem; }
+        .photo-grid { max-width: 620px; margin: 0 auto; }
+        .photo-frame { position: relative; overflow: hidden; border-radius: 16px; }
+        .photo-item { display: block; height: clamp(140px, 30vw, 220px); }
+        .photo-caption {
+            position: absolute;
+            right: 8px;
+            bottom: 8px;
+            left: 8px;
+            padding: 6px 8px;
+            border-radius: 9px;
+            background: rgba(255,255,255,.84);
+            color: #79505e;
+            font-size: .75rem;
+            font-weight: 600;
+        }
+
+        .wish-card {
+            max-width: 620px;
+            margin: 0 auto;
+            padding: clamp(19px, 5vw, 30px);
+            border: 1px solid rgba(255,255,255,.8);
+            border-radius: 20px;
+            background: rgba(255,255,255,.72);
+            box-shadow: 0 8px 24px rgba(174,67,100,.09);
+            font-size: 1rem;
+            line-height: 1.9;
+            text-align: left;
+        }
+
+        .wish-card p { margin: 0 0 14px; }
+        .wish-card p:last-child { margin-bottom: 0; }
+        .signature { color: #d94e71; font-weight: 700; text-align: right; }
+
+        h1 {
+            margin: 0 0 8px;
+            color: #c83f60;
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.7rem, 12vw, 3.7rem);
+            line-height: 1.1;
+            text-shadow: 1px 2px 0 rgba(255, 255, 255, 0.7);
+        }
+
+        .nickname {
+            margin: 0 0 20px;
+            color: #d94e71;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
+
+        .hearts-box {
+            margin: 0 0 8px;
+            font-size: 3.2rem;
+            animation: pulse 1.6s ease-in-out infinite alternate;
+        }
+
+        .celebrate-btn {
+            width: min(100%, 290px);
+            margin: 0 auto 24px;
+            padding: 13px 22px;
+            border: 0;
+            border-radius: 999px;
+            background: linear-gradient(45deg, var(--primary-pink), var(--secondary-pink));
+            box-shadow: 0 7px 18px rgba(255, 117, 140, 0.35);
+            color: #fff;
+            cursor: pointer;
+            font: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: transform 180ms ease, box-shadow 180ms ease;
+        }
+
+        .celebrate-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(255, 117, 140, 0.42); }
+        .celebrate-btn:active { transform: scale(0.97); }
+        .celebrate-btn:focus-visible { outline: 3px solid #9b3450; outline-offset: 3px; }
+
+        .photo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+        .photo-item { width: 100%; border: 3px solid #fff; background: #f8c4d1; box-shadow: 0 5px 14px rgba(83, 39, 53, 0.1); object-fit: cover; transition: transform 220ms ease; }
+        .photo-frame:nth-child(-n + 2) .photo-item { object-position: center 18%; }
+        .photo-item:hover { transform: scale(1.035) rotate(-1deg); }
+
+        .gift-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-width: 620px; margin: 0 auto; }
+        .gift-card { overflow: hidden; border: 1px solid rgba(255,255,255,.85); border-radius: 18px; background: rgba(255,255,255,.78); box-shadow: 0 8px 24px rgba(174,67,100,.1); }
+        .gift-photo { display: block; width: 100%; height: clamp(150px, 34vw, 230px); border-bottom: 3px solid #fff; background: #f8c4d1; object-fit: cover; }
+        .gift-card-content { padding: 14px; text-align: center; }
+        .gift-name { margin: 0 0 12px; color: #c83f60; font-size: 1rem; }
+        .gift-card .celebrate-btn { display: inline-block; margin-bottom: 0; text-decoration: none; }
+        .gift-confirmation { max-width: 620px; margin: 22px auto 0; }
+        .gift-confirmation p { margin: 0 0 12px; }
+        .cake-image-frame { position: relative; width: min(100%, 390px); margin: 0 auto 20px; }
+        .cake-photo { display: block; width: 100%; border: 4px solid #fff; border-radius: 22px; box-shadow: 0 12px 30px rgba(83,39,53,.18); }
+        .candle-smoke { position: absolute; top: 21%; left: 23%; width: 54%; height: 29%; border-radius: 50%; opacity: 0; background: radial-gradient(ellipse at center, rgba(120,112,99,.98) 0%, rgba(120,112,99,.96) 80%, rgba(120,112,99,.9) 95%, transparent 100%); filter: blur(5px); pointer-events: none; transition: opacity 900ms ease; }
+        .cake-stage.candles-out .candle-smoke { opacity: 1; }
+        .cake-wish { margin-top: 18px; color: #a33a58; font-family: 'Dancing Script', cursive; font-size: clamp(1.7rem, 6vw, 2.5rem); font-weight: 700; line-height: 1.4; text-align: center; }
+
+        .audio-player-container {
+            padding: 15px;
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.72);
+        }
+
+        .audio-track-info { margin-bottom: 9px; color: #c83f60; font-size: 0.88rem; font-weight: 600; }
+        .story-intro { max-width: 580px; margin: 0 auto 26px; color: #79505e; line-height: 1.8; }
+        .story-timeline { position: relative; display: grid; gap: 18px; max-width: 620px; margin: 0 auto; text-align: left; }
+        .story-timeline::before { position: absolute; top: 28px; bottom: 28px; left: 22px; width: 2px; background: linear-gradient(#e98ba1, #bd7899); content: ""; }
+        .story-moment { position: relative; display: grid; grid-template-columns: 46px 92px minmax(0, 1fr); align-items: center; gap: 14px; padding: 12px; border: 1px solid rgba(255,255,255,.85); border-radius: 17px; background: rgba(255,255,255,.72); box-shadow: 0 8px 24px rgba(174,67,100,.08); }
+        .story-marker { z-index: 1; display: grid; width: 22px; height: 22px; margin: auto; place-items: center; border: 4px solid #fff; border-radius: 50%; background: #d94e71; box-shadow: 0 0 0 2px #eaa0b2; }
+        .story-photo { display: block; width: 92px; height: 82px; border-radius: 11px; object-fit: cover; }
+        .story-copy { min-width: 0; }
+        .story-copy h3 { margin: 0 0 5px; color: #a33a58; font-size: .98rem; }
+        .story-copy p { margin: 0; color: #715861; font-size: .86rem; line-height: 1.65; }
+        .story-years { display: inline-block; margin-top: 10px; padding: 5px 10px; border: 1px solid rgba(200,63,96,.22); border-radius: 999px; background: rgba(255,255,255,.66); color: #a33a58; font-size: .78rem; font-weight: 700; letter-spacing: .08em; }
+        .photo-note {
+            max-width: 620px;
+            margin: 0 auto 18px;
+            padding: 10px 14px;
+            border: 1px dashed rgba(200, 63, 96, 0.45);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            color: #6a4854;
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+        audio { display: block; width: 100%; height: 42px; }
+
+        .letter-card { max-width: 620px; margin: 0 auto; }
+        .letter-paragraph { opacity: 0; transform: translateY(12px); transition: opacity 800ms ease, transform 800ms ease; }
+        .letter-paragraph.is-visible { opacity: 1; transform: translateY(0); }
+        .ending-stage {
+            position: fixed;
+            z-index: 10;
+            inset: 0;
+            display: grid;
+            min-height: 100vh;
+            min-height: 100svh;
+            place-items: center;
+            overflow: hidden;
+            padding: 28px;
+            background-color: #101025;
+            background-image:
+                radial-gradient(ellipse at 50% 110%, rgba(133,74,133,.36), transparent 60%),
+                linear-gradient(180deg, rgba(8,10,29,.70), rgba(13,13,37,.82)),
+                url("memories/photo-4.png");
+            background-position: center;
+            background-size: cover;
+            color: #fff8fb;
+            text-align: center;
+        }
+        .ending-stage::before, .ending-stage::after { position: absolute; inset: 0; pointer-events: none; content: ""; }
+        .ending-stage::before { background-image: radial-gradient(2px 2px at 12% 20%, #fff 60%, transparent), radial-gradient(1px 1px at 79% 18%, #fff 60%, transparent), radial-gradient(2px 2px at 67% 72%, #ffe3ef 60%, transparent), radial-gradient(1px 1px at 28% 76%, #fff 60%, transparent), radial-gradient(1px 1px at 89% 56%, #fff 60%, transparent), radial-gradient(2px 2px at 42% 34%, #ffe3ef 60%, transparent); opacity: .8; }
+        .ending-stage::after { background: radial-gradient(ellipse at center, transparent 18%, rgba(8,10,29,.58) 100%); }
+        .ending-content { position: relative; z-index: 1; width: min(100%, 760px); }
+        .ending-line { margin: 0; color: #fff8fb; font-family: 'Dancing Script', cursive; font-size: clamp(2.5rem, 8vw, 5rem); line-height: 1.25; text-shadow: 0 3px 28px rgba(0,0,0,.45); opacity: 0; transform: translateY(12px); transition: opacity 1.8s ease, transform 1.8s ease; }
+        .ending-stage.is-revealed .ending-line { opacity: 1; transform: translateY(0); }
+        .ending-replay { margin-top: 34px; padding: 10px 17px; border: 1px solid rgba(255,255,255,.45); border-radius: 999px; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; font: inherit; font-size: .84rem; letter-spacing: .02em; opacity: 0; transition: opacity 700ms ease, background 180ms ease; }
+        .ending-replay.is-visible { opacity: 1; }
+        .ending-replay:hover { background: rgba(255,255,255,.2); }
+        .ending-replay:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+        body.cinematic-mode { overflow: hidden; }
+        body.cinematic-mode .main-card { transform: none; animation: none; border-color: transparent; background: transparent; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
+        }
+
+        @keyframes birthday-pop {
+            0% { opacity: 0; transform: scale(.35) rotate(-8deg); }
+            70% { opacity: 1; transform: scale(1.12) rotate(2deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0); }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 16px 10px; }
+            .main-card { padding: 24px 15px; }
+            .main-card { margin-top: 1vh; }
+            .photo-item { height: 130px; }
+            .photo-caption { font-size: .68rem; }
+            .story-moment { grid-template-columns: 28px 62px minmax(0, 1fr); gap: 8px; padding: 8px; }
+            .story-timeline::before { left: 14px; }
+            .story-marker { width: 18px; height: 18px; }
+            .story-photo { width: 62px; height: 66px; }
+            .story-copy h3 { font-size: .88rem; }
+            .story-copy p { font-size: .77rem; }
+            .ending-stage { padding: 20px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <main class="main-card">
+        <section class="gate-card" id="birthday-gate" aria-labelledby="gate-title">
+            <div class="gate-icon" aria-hidden="true">🎁🔐</div>
+            <h1 class="gate-title" id="gate-title">A little birthday surprise...</h1>
+            <p class="gate-copy">This celebration is locked for one very special person. Enter your birthday to open your surprise! 💗</p>
+            <form class="birthday-form" id="birthday-form">
+                <label for="birthday-input">Your birthdate</label>
+                <input class="birthday-input" id="birthday-input" name="birthdate" type="date" required autocomplete="bday">
+                <button class="celebrate-btn" type="submit">Unlock my surprise ✨</button>
+                <p class="gate-error" id="gate-error" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <div class="celebration" id="celebration" hidden>
+            <section class="hero-celebration" id="birthday-stage" aria-label="Birthday celebration" hidden>
+                <div class="hero-sparkles" aria-hidden="true">🎉🎂🎉</div>
+                <h1 class="hero-title">HAPPY BIRTHDAY<br>MY MESSY 🫂<br>🤗 ❤️ 🫶!</h1>
+                <p class="hero-subtitle">Today is all about YOU! 💖</p>
+                <button class="celebrate-btn" id="celebrate" type="button">🎊 More confetti!</button>
+                <br>
+                <button class="celebrate-btn forward-button" id="to-wishes" type="button">Move forward 💌</button>
+            </section>
+
+            <section class="stage-section" id="wishes-stage" aria-labelledby="wishes-title" hidden>
+                <div class="hearts-box" aria-hidden="true">💖✨💖</div>
+                <h2 class="stage-heading" id="wishes-title">Best wishes to my MESSY &amp; my crush 💌</h2>
+                <div class="wish-card">
+                    <p><strong>Hey, my MESSY 🫂</strong></p>
+                    <p>Happy birthday to my best friend, my favorite person, and the one who makes every day brighter. I hope your day is filled with laughter, love, cake, and all the little things that make you happiest.</p>
+                    <p>You have the biggest heart and the most wonderfully chaotic energy. Thank you for being my safe place, my partner in every silly moment, and the person who can always make me smile. I’m so lucky to have you—and maybe my heart has a tiny secret crush on you too. 🤭❤️</p>
+                    <p>May this year bring you beautiful surprises, exciting adventures, and everything you’ve been wishing for. Never stop being your amazing self.</p>
+                    <p class="signature">Love you lots, your bestie ✨🫶</p>
+                </div>
+                <button class="celebrate-btn forward-button" id="to-story" type="button">Turn the page with me 🦋</button>
+            </section>
+
+            <section class="stage-section" id="story-stage" aria-labelledby="story-title" hidden>
+                <div class="hearts-box" aria-hidden="true">🌙🦋💌</div>
+                <h2 class="stage-heading" id="story-title">Three Years Apart</h2>
+                <p class="story-intro">Some chapters are measured in years. The ones that matter most are measured in the moments we keep—and the way we find each other again.</p>
+                <div class="story-timeline">
+                    <article class="story-moment">
+                        <span class="story-marker" aria-hidden="true"></span>
+                        <img class="story-photo" src="memories/photo-1.png" alt="A personal photo from our memories" loading="lazy">
+                        <div class="story-copy">
+                            <h3>When we met</h3>
+                            <p>One hello became the beginning of a friendship I still hold close.</p>
+                        </div>
+                    </article>
+                    <article class="story-moment">
+                        <span class="story-marker" aria-hidden="true"></span>
+                        <img class="story-photo" src="memories/photo-2.png" alt="A personal photo from our time together" loading="lazy">
+                        <div class="story-copy">
+                            <h3>Our memories</h3>
+                            <p>Little jokes, familiar smiles, and ordinary days that turned into favorite stories.</p>
+                        </div>
+                    </article>
+                    <article class="story-moment">
+                        <span class="story-marker" aria-hidden="true"></span>
+                        <img class="story-photo" src="memories/photo-3.png" alt="A personal photo from our shared memories" loading="lazy">
+                        <div class="story-copy">
+                            <h3>The silence</h3>
+                            <p>Life took us in different directions for a while. Three years passed, but the good memories stayed.</p>
+                            <span class="story-years">THREE YEARS APART</span>
+                        </div>
+                    </article>
+                    <article class="story-moment">
+                        <span class="story-marker" aria-hidden="true"></span>
+                        <img class="story-photo" src="memories/photo-4.png" alt="A personal photo marking a new chapter" loading="lazy">
+                        <div class="story-copy">
+                            <h3>Finding our way back</h3>
+                            <p>Now there's a new chapter to write—and I'm so glad we're here for it.</p>
+                        </div>
+                    </article>
+                </div>
+                <button class="celebrate-btn forward-button" id="to-memories" type="button">Keep going to our song &amp; pictures 🎵</button>
+            </section>
+
+            <section class="stage-section" id="memories-stage" aria-labelledby="memories-title" hidden>
+                <div class="hearts-box" aria-hidden="true">🎂🎶📸</div>
+                <h2 class="stage-heading" id="memories-title">A birthday song &amp; memories for you 💕</h2>
+                <div class="audio-player-container">
+                    <div class="audio-track-info">🎵 Happy Birthday, MESSY!</div>
+                    <button class="celebrate-btn" id="replay-song" type="button">▶ Play birthday song again</button>
+                    <p class="music-status" id="music-status" role="status" aria-live="polite">Your birthday song is ready! 🎶</p>
+                </div>
+                <h3 class="stage-heading" style="margin-top: 30px">📸 Our beautiful memories</h3>
+                <div class="photo-note">
+                    <p>Birthday wish: May your day be as lovely, bright, and unforgettable as you are. You deserve all the happiness in the world! 🎂💖</p>
+                    <p>Flirty thought: Is it your birthday, or did the world just get a little more beautiful today? 😉✨</p>
+                    <p>One more wish: May this year bring you sweet surprises, big smiles, and plenty of reasons to stay close to your favorite person (me, obviously 🤭💕).</p>
+                </div>
+                <div class="photo-grid">
+                    <div class="photo-frame"><img src="memories/photo-1.png" alt="A favorite memory together" class="photo-item" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&amp;fit=crop&amp;w=600&amp;q=80'"><span class="photo-caption">A day to remember ✨</span></div>
+                    <div class="photo-frame"><img src="memories/photo-2.png" alt="A happy moment with my bestie" class="photo-item" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&amp;fit=crop&amp;w=600&amp;q=80'"><span class="photo-caption">My favorite person 💕</span></div>
+                    <div class="photo-frame"><img src="memories/photo-3.png" alt="A lovely memory with my best friend" class="photo-item" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&amp;fit=crop&amp;w=600&amp;q=80'"><span class="photo-caption">Always making me smile 😊</span></div>
+                    <div class="photo-frame"><img src="memories/photo-4.png" alt="A special day together" class="photo-item" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&amp;fit=crop&amp;w=600&amp;q=80'"><span class="photo-caption">More memories to come 🌸</span></div>
+                </div>
+                <button class="celebrate-btn forward-button" id="to-more" type="button">Move forward for one more surprise 💌</button>
+            </section>
+
+            <section class="stage-section" id="more-stage" aria-labelledby="more-title" hidden>
+                <div class="hearts-box" aria-hidden="true">💌✨💕</div>
+                <h2 class="stage-heading" id="more-title">One more little surprise 💖</h2>
+                <div class="wish-card" id="more-content">
+                    <p><strong>Hey, Bestie 🥹❤️</strong></p>
+                    <p>Three years of silence, so many missed moments, and now we're talking again. Maybe life took us apart for a while, but I'm happy we got another chance to create beautiful memories together. 🫂💗</p>
+                    <p>I'm not worried about the past anymore. I just hope this new chapter brings us more laughter, silly conversations, and unforgettable memories.</p>
+                    <p><strong>Some bonds deserve another beautiful beginning.</strong> 🦋</p>
+                    <p>Happy Birthday, my bestie! 🎂💖 Let's make this chapter a special one. 🫶✨</p>
+                </div>
+                <button class="celebrate-btn forward-button" id="to-cake" type="button">Continue to one last surprise 🎂</button>
+            </section>
+
+            <section class="stage-section cake-stage" id="cake-stage" aria-labelledby="cake-title" hidden>
+                <div class="hearts-box" aria-hidden="true">🎂🕯️✨</div>
+                <h2 class="stage-heading" id="cake-title">A final birthday surprise 🎂</h2>
+                <figure class="cake-image-frame">
+                    <img class="cake-photo" id="cake-lit-photo" src="cake-surprise.jpg" alt="Birthday cake with glowing candles">
+                    <div class="candle-smoke" aria-hidden="true"></div>
+                </figure>
+                <p class="music-status" id="cake-candle-status" role="status" aria-live="polite">Make a wish while the candles glow… 🕯️</p>
+                <div class="wish-card cake-wish" id="final-birthday-wish" hidden>
+                    We can't change our old chapters, but maybe we can make the next one beautiful. Happy Birthday, Bestie! ❤️🦋
+                </div>
+                <button class="celebrate-btn forward-button" id="to-gifts" type="button" hidden>Go to your gift section 🎁</button>
+            </section>
+
+            <section class="stage-section" id="gifts-stage" aria-labelledby="gifts-title" hidden>
+                <div class="hearts-box" aria-hidden="true">🎀🎁💝</div>
+                <h2 class="stage-heading" id="gifts-title">Your birthday gift is waiting… 🎀</h2>
+                <p class="photo-note">Choose a gift to open our WhatsApp chat and download its picture 💌</p>
+                <div class="gift-grid">
+                    <article class="gift-card">
+                        <img class="gift-photo" src="gifts/gift-1.jpg" alt="Gift 1">
+                        <div class="gift-card-content">
+                            <h3 class="gift-name">Gift 1 🎁</h3>
+                            <button class="celebrate-btn choose-gift" type="button" data-gift="Gift 1" data-image="gifts/gift-1.jpg">Choose This Gift 💚</button>
+                        </div>
+                    </article>
+                    <article class="gift-card">
+                        <img class="gift-photo" src="gifts/gift-2.jpg" alt="Gift 2">
+                        <div class="gift-card-content">
+                            <h3 class="gift-name">Gift 2 🎁</h3>
+                            <button class="celebrate-btn choose-gift" type="button" data-gift="Gift 2" data-image="gifts/gift-2.jpg">Choose This Gift 💚</button>
+                        </div>
+                    </article>
+                    <article class="gift-card">
+                        <img class="gift-photo" src="gifts/gift-3.png" alt="Gift 3">
+                        <div class="gift-card-content">
+                            <h3 class="gift-name">Gift 3 🎁</h3>
+                            <button class="celebrate-btn choose-gift" type="button" data-gift="Gift 3" data-image="gifts/gift-3.png">Choose This Gift 💚</button>
+                        </div>
+                    </article>
+                    <article class="gift-card">
+                        <img class="gift-photo" src="gifts/gift-4.jpg" alt="Gift 4">
+                        <div class="gift-card-content">
+                            <h3 class="gift-name">Gift 4 🎁</h3>
+                            <button class="celebrate-btn choose-gift" type="button" data-gift="Gift 4" data-image="gifts/gift-4.jpg">Choose This Gift 💚</button>
+                        </div>
+                    </article>
+                </div>
+                <div class="wish-card gift-confirmation" id="gift-confirmation" role="status" aria-live="polite" hidden>
+                    <p>My sweet heart, your gift will be arriving very soon! 🎁💖</p>
+                    <p id="gift-confirmation-message"></p>
+                    <p id="gift-share-status">Opening WhatsApp with your choice… 💌</p>
+                    <a class="celebrate-btn" id="download-gift-photo" href="#" download>Download selected gift picture 📥</a>
+                    <p>Message me at <strong>+91 7989373949</strong></p>
+                    <a class="celebrate-btn" id="gift-whatsapp" href="https://wa.me/917989373949" target="_blank" rel="noopener noreferrer">Open WhatsApp 💚</a>
+                </div>
+                <button class="celebrate-btn forward-button" id="open-letter" type="button">Wait… there's one thing I never told you 🥹</button>
+            </section>
+
+            <section class="stage-section" id="letter-stage" aria-labelledby="letter-title" hidden>
+                <div class="hearts-box" aria-hidden="true">💌✨🌙</div>
+                <h2 class="stage-heading" id="letter-title">A little something from my heart</h2>
+                <div class="wish-card letter-card" id="secret-letter" aria-live="polite">
+                    <p class="letter-paragraph" hidden>There's something I've kept tucked away behind all the jokes and birthday wishes.</p>
+                    <p class="letter-paragraph" hidden>Those three quiet years never erased how much our friendship meant to me. Sometimes I wondered if we'd ever find our way back to those silly conversations.</p>
+                    <p class="letter-paragraph" hidden>Now that we're talking again, I don't want to take a single laugh, late-night chat, or little moment for granted. Having you in my life again feels like a gift all by itself.</p>
+                    <p class="letter-paragraph" hidden>I care about you more than I know how to say—and maybe, someday, I'll be brave enough to tell you just how much. Whatever comes next, I'm grateful it's a chapter we get to write.</p>
+                    <p class="letter-paragraph signature" hidden>Happy birthday, my favorite person. I'm really glad you're here. 💗</p>
+                </div>
+                <button class="celebrate-btn forward-button" id="to-ending" type="button" hidden>One last thing… ✨</button>
+            </section>
+
+            <section class="ending-stage" id="ending-stage" aria-label="A final birthday message" hidden>
+                <div class="ending-content">
+                    <p class="ending-line" id="ending-line">No matter how many years pass, I’ll always be grateful we found our way back to each other.</p>
+                    <button class="ending-replay" id="ending-replay" type="button" hidden>Read this again anytime</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const HER_BIRTHDATE = '2006-10-28';
+        const birthdayForm = document.getElementById('birthday-form');
+        const birthdayInput = document.getElementById('birthday-input');
+        const gateError = document.getElementById('gate-error');
+        const gate = document.getElementById('birthday-gate');
+        const celebration = document.getElementById('celebration');
+        const birthdayStage = document.getElementById('birthday-stage');
+        const wishesStage = document.getElementById('wishes-stage');
+        const storyStage = document.getElementById('story-stage');
+        const memoriesStage = document.getElementById('memories-stage');
+        const moreStage = document.getElementById('more-stage');
+        const cakeStage = document.getElementById('cake-stage');
+        const giftsStage = document.getElementById('gifts-stage');
+        const letterStage = document.getElementById('letter-stage');
+        const endingStage = document.getElementById('ending-stage');
+        const pageStages = [birthdayStage, wishesStage, storyStage, memoriesStage, moreStage, cakeStage, giftsStage, letterStage, endingStage];
+        const musicStatus = document.getElementById('music-status');
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const cakeCandleStatus = document.getElementById('cake-candle-status');
+        const finalBirthdayWish = document.getElementById('final-birthday-wish');
+        let candleTimer;
+        let letterTimers = [];
+        let endingReplayTimer;
+        let birthdayMusicGain;
+
+        function startCakeSurprise() {
+            window.clearTimeout(candleTimer);
+            cakeStage.classList.remove('candles-out');
+            finalBirthdayWish.hidden = true;
+            document.getElementById('to-gifts').hidden = true;
+            cakeCandleStatus.textContent = 'Make a wish while the candles glow… 🕯️';
+            candleTimer = window.setTimeout(() => {
+                cakeStage.classList.add('candles-out');
+                cakeCandleStatus.textContent = 'The candles are out—your wish is ready! ✨';
+                finalBirthdayWish.hidden = false;
+                document.getElementById('to-gifts').hidden = false;
+            }, 6000);
+        }
+
+        function burstConfetti() {
+            if (typeof window.confetti !== 'function') return;
+            window.confetti({
+                particleCount: 120,
+                spread: 75,
+                origin: { y: 0.62 },
+                colors: ['#ff758c', '#ff7eb3', '#ffccd5', '#ffffff']
+            });
+        }
+
+        document.getElementById('celebrate').addEventListener('click', burstConfetti);
+
+        function showStage(stage) {
+            pageStages.forEach((pageStage) => {
+                pageStage.hidden = pageStage !== stage;
+            });
+            const showEnding = stage === endingStage;
+            document.body.classList.toggle('cinematic-mode', showEnding);
+            if (showEnding) {
+                window.scrollTo({ top: 0, behavior: 'auto' });
+            } else {
+                celebration.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+            }
+        }
+
+        document.getElementById('to-wishes').addEventListener('click', () => showStage(wishesStage));
+        document.getElementById('to-story').addEventListener('click', () => showStage(storyStage));
+        document.getElementById('to-memories').addEventListener('click', () => {
+            showStage(memoriesStage);
+            playBirthdaySong();
+        });
+        document.getElementById('to-more').addEventListener('click', () => showStage(moreStage));
+        document.getElementById('to-cake').addEventListener('click', () => {
+            showStage(cakeStage);
+            startCakeSurprise();
+        });
+        document.getElementById('to-gifts').addEventListener('click', () => showStage(giftsStage));
+
+        const letterParagraphs = Array.from(document.querySelectorAll('.letter-paragraph'));
+        const toEndingButton = document.getElementById('to-ending');
+        function openSecretLetter() {
+            letterTimers.forEach((timer) => window.clearTimeout(timer));
+            letterTimers = [];
+            letterParagraphs.forEach((paragraph) => {
+                paragraph.hidden = true;
+                paragraph.classList.remove('is-visible');
+            });
+            toEndingButton.hidden = true;
+            showStage(letterStage);
+
+            letterParagraphs.forEach((paragraph, index) => {
+                const timer = window.setTimeout(() => {
+                    paragraph.hidden = false;
+                    window.requestAnimationFrame(() => paragraph.classList.add('is-visible'));
+                    if (index === letterParagraphs.length - 1) toEndingButton.hidden = false;
+                }, reduceMotion ? 0 : index * 1450);
+                letterTimers.push(timer);
+            });
+        }
+
+        document.getElementById('open-letter').addEventListener('click', openSecretLetter);
+
+        const endingReplayButton = document.getElementById('ending-replay');
+        function startEnding() {
+            window.clearTimeout(endingReplayTimer);
+            endingStage.classList.remove('is-revealed');
+            endingReplayButton.hidden = true;
+            endingReplayButton.classList.remove('is-visible');
+            showStage(endingStage);
+            fadeBirthdayMusic();
+            window.requestAnimationFrame(() => endingStage.classList.add('is-revealed'));
+            endingReplayTimer = window.setTimeout(() => {
+                endingReplayButton.hidden = false;
+                window.requestAnimationFrame(() => endingReplayButton.classList.add('is-visible'));
+            }, reduceMotion ? 0 : 4800);
+        }
+
+        toEndingButton.addEventListener('click', startEnding);
+        endingReplayButton.addEventListener('click', openSecretLetter);
+
+        const giftConfirmation = document.getElementById('gift-confirmation');
+        const giftConfirmationMessage = document.getElementById('gift-confirmation-message');
+        const giftShareStatus = document.getElementById('gift-share-status');
+        const giftWhatsApp = document.getElementById('gift-whatsapp');
+        const downloadGiftPhoto = document.getElementById('download-gift-photo');
+        document.querySelectorAll('.choose-gift').forEach((button) => {
+            button.addEventListener('click', () => {
+                const gift = button.dataset.gift;
+                const giftImage = button.dataset.image;
+                const imageName = giftImage.split('/').pop();
+                const message = `Hi! I chose ${gift} for my birthday. My sweet heart, your gift will be arriving very soon! 🎁💖`;
+                const whatsappUrl = `https://wa.me/917989373949?text=${encodeURIComponent(message)}`;
+
+                giftConfirmationMessage.textContent = `You chose ${gift}! What a lovely pick 🎁💖`;
+                giftShareStatus.textContent = 'Opening WhatsApp with your choice… 💌';
+                downloadGiftPhoto.href = giftImage;
+                downloadGiftPhoto.download = imageName;
+                giftWhatsApp.href = whatsappUrl;
+                giftConfirmation.hidden = false;
+
+                downloadGiftPhoto.click();
+                giftShareStatus.textContent = 'WhatsApp is opening to my number. Attach the downloaded gift picture in the chat, then tap Send 📥';
+                window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+            });
+        });
+
+        let birthdayAudioContext;
+        let songTimeout;
+        function playBirthdaySong() {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContextClass) {
+                musicStatus.textContent = 'This browser does not support the birthday tune. Try another browser 🎵';
+                return;
+            }
+
+            window.clearTimeout(songTimeout);
+            birthdayAudioContext ??= new AudioContextClass();
+            birthdayAudioContext.resume();
+            if (!birthdayMusicGain) {
+                birthdayMusicGain = birthdayAudioContext.createGain();
+                birthdayMusicGain.connect(birthdayAudioContext.destination);
+            }
+            birthdayMusicGain.gain.cancelScheduledValues(birthdayAudioContext.currentTime);
+            birthdayMusicGain.gain.setValueAtTime(1, birthdayAudioContext.currentTime);
+
+            const beat = 0.38;
+            const melody = [
+                ['G4', .5], ['G4', .5], ['A4', 1], ['G4', 1], ['C5', 1], ['B4', 2],
+                ['G4', .5], ['G4', .5], ['A4', 1], ['G4', 1], ['D5', 1], ['C5', 2],
+                ['G4', .5], ['G4', .5], ['G5', 1], ['E5', 1], ['C5', 1], ['B4', 1], ['A4', 2],
+                ['F5', .5], ['F5', .5], ['E5', 1], ['C5', 1], ['D5', 1], ['C5', 2]
+            ];
+            const frequencies = { G4: 392, A4: 440, B4: 493.88, C5: 523.25, D5: 587.33, E5: 659.25, F5: 698.46, G5: 783.99 };
+            let startAt = birthdayAudioContext.currentTime + 0.08;
+
+            melody.forEach(([note, beats]) => {
+                const duration = beats * beat;
+                const oscillator = birthdayAudioContext.createOscillator();
+                const volume = birthdayAudioContext.createGain();
+                oscillator.type = 'sine';
+                oscillator.frequency.value = frequencies[note];
+                volume.gain.setValueAtTime(0, startAt);
+                volume.gain.linearRampToValueAtTime(0.16, startAt + 0.025);
+                volume.gain.setValueAtTime(0.16, startAt + duration * 0.72);
+                volume.gain.linearRampToValueAtTime(0, startAt + duration * 0.92);
+                oscillator.connect(volume);
+                volume.connect(birthdayMusicGain);
+                oscillator.start(startAt);
+                oscillator.stop(startAt + duration);
+                startAt += duration;
+            });
+
+            musicStatus.textContent = 'Now playing your birthday song! 🎂🎶';
+            songTimeout = window.setTimeout(() => {
+                musicStatus.textContent = 'Your birthday song is ready to play again! 💖';
+            }, Math.max(0, (startAt - birthdayAudioContext.currentTime) * 1000));
+        }
+
+        function fadeBirthdayMusic() {
+            if (!birthdayAudioContext || !birthdayMusicGain) return;
+            const fadeAt = birthdayAudioContext.currentTime;
+            birthdayMusicGain.gain.cancelScheduledValues(fadeAt);
+            birthdayMusicGain.gain.setValueAtTime(birthdayMusicGain.gain.value, fadeAt);
+            birthdayMusicGain.gain.linearRampToValueAtTime(0, fadeAt + 2.5);
+        }
+
+        document.getElementById('replay-song').addEventListener('click', playBirthdaySong);
+
+        birthdayForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (birthdayInput.value !== HER_BIRTHDATE) {
+                gateError.textContent = 'That date didn’t unlock it—try your birthday again 💗';
+                birthdayInput.focus();
+                return;
+            }
+
+            gate.hidden = true;
+            celebration.hidden = false;
+            showStage(birthdayStage);
+            burstConfetti();
+            window.setTimeout(burstConfetti, 350);
+            window.setTimeout(burstConfetti, 800);
+        });
+    </script>
+</body>
+</html>
