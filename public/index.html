@@ -190,16 +190,13 @@
         }
 
         .audio-track-info { margin-bottom: 9px; color: #c83f60; font-size: 0.88rem; font-weight: 600; }
-        .story-intro { max-width: 580px; margin: 0 auto 26px; color: #79505e; line-height: 1.8; }
-        .story-timeline { position: relative; display: grid; gap: 18px; max-width: 620px; margin: 0 auto; text-align: left; }
-        .story-timeline::before { position: absolute; top: 28px; bottom: 28px; left: 22px; width: 2px; background: linear-gradient(#e98ba1, #bd7899); content: ""; }
-        .story-moment { position: relative; display: grid; grid-template-columns: 46px 92px minmax(0, 1fr); align-items: center; gap: 14px; padding: 12px; border: 1px solid rgba(255,255,255,.85); border-radius: 17px; background: rgba(255,255,255,.72); box-shadow: 0 8px 24px rgba(174,67,100,.08); }
-        .story-marker { z-index: 1; display: grid; width: 22px; height: 22px; margin: auto; place-items: center; border: 4px solid #fff; border-radius: 50%; background: #d94e71; box-shadow: 0 0 0 2px #eaa0b2; }
-        .story-photo { display: block; width: 92px; height: 138px; border: 2px solid #fff; border-radius: 11px; background: #f8c4d1; object-fit: contain; }
-        .story-copy { min-width: 0; }
-        .story-copy h3 { margin: 0 0 5px; color: #a33a58; font-size: .98rem; }
-        .story-copy p { margin: 0; color: #715861; font-size: .86rem; line-height: 1.65; }
-        .story-years { display: inline-block; margin-top: 10px; padding: 5px 10px; border: 1px solid rgba(200,63,96,.22); border-radius: 999px; background: rgba(255,255,255,.66); color: #a33a58; font-size: .78rem; font-weight: 700; letter-spacing: .08em; }
+        .cutiepie-intro { max-width: 580px; margin: 0 auto 24px; color: #79505e; line-height: 1.8; }
+        .photo-grid.cutiepie-grid { max-width: 560px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+        .cutiepie-card { position: relative; }
+        .photo-item.cutiepie-photo { aspect-ratio: 768 / 1365; }
+        .cutiepie-caption { color: #c83f60; font-family: 'Dancing Script', cursive; font-size: 1.35rem; }
+        .cutiepie-heart { position: absolute; top: 10px; right: 10px; z-index: 1; font-size: clamp(1.2rem, 5vw, 1.8rem); filter: drop-shadow(0 2px 3px rgba(50,20,30,.45)); pointer-events: none; animation: pulse 1.4s ease-in-out infinite alternate; }
+        .cutiepie-card:nth-child(even) .cutiepie-heart { animation-delay: 350ms; }
         .photo-note {
             max-width: 620px;
             margin: 0 auto 18px;
@@ -271,12 +268,8 @@
             .main-card { margin-top: 1vh; }
             .photo-item, .memory-video { aspect-ratio: 9 / 16; }
             .photo-caption { padding: 8px 6px; font-size: .68rem; }
-            .story-moment { grid-template-columns: 28px 62px minmax(0, 1fr); gap: 8px; padding: 8px; }
-            .story-timeline::before { left: 14px; }
-            .story-marker { width: 18px; height: 18px; }
-            .story-photo { width: 62px; height: 94px; }
-            .story-copy h3 { font-size: .88rem; }
-            .story-copy p { font-size: .77rem; }
+            .photo-grid.cutiepie-grid { gap: 12px; }
+            .cutiepie-caption { font-size: 1.15rem; }
             .ending-stage { padding: 20px; }
         }
 
@@ -323,49 +316,36 @@
                     <p>May this year bring you beautiful surprises, exciting adventures, and everything you’ve been wishing for. Never stop being your amazing self.</p>
                     <p class="signature">Love you lots, your bestie ✨🫶</p>
                 </div>
-                <button class="celebrate-btn forward-button" id="to-story" type="button">Turn the page with me 🦋</button>
+                <button class="celebrate-btn forward-button" id="to-story" type="button">Meet my lovely cutiepie 💕</button>
             </section>
 
             <section class="stage-section" id="story-stage" aria-labelledby="story-title" hidden>
-                <div class="hearts-box" aria-hidden="true">🌙🦋💌</div>
-                <h2 class="stage-heading" id="story-title">Three Years Apart</h2>
-                <p class="story-intro">Some chapters are measured in years. The ones that matter most are measured in the moments we keep—and the way we find each other again.</p>
-                <div class="story-timeline">
-                    <article class="story-moment">
-                        <span class="story-marker" aria-hidden="true"></span>
-                        <img class="story-photo" src="memories/Snapchat-1286250603.jpg" alt="A personal memory together" loading="lazy">
-                        <div class="story-copy">
-                            <h3>When we met</h3>
-                            <p>One hello became the beginning of a friendship I still hold close.</p>
-                        </div>
-                    </article>
-                    <article class="story-moment">
-                        <span class="story-marker" aria-hidden="true"></span>
-                        <img class="story-photo" src="memories/Snapchat-618683686.jpg" alt="A personal memory together" loading="lazy">
-                        <div class="story-copy">
-                            <h3>Our memories</h3>
-                            <p>Little jokes, familiar smiles, and ordinary days that turned into favorite stories.</p>
-                        </div>
-                    </article>
-                    <article class="story-moment">
-                        <span class="story-marker" aria-hidden="true"></span>
-                        <img class="story-photo" src="memories/Snapchat-471866539.jpg" alt="A little keepsake from our memories" loading="lazy">
-                        <div class="story-copy">
-                            <h3>The silence</h3>
-                            <p>Life took us in different directions for a while. Three years passed, but the good memories stayed.</p>
-                            <span class="story-years">THREE YEARS APART</span>
-                        </div>
-                    </article>
-                    <article class="story-moment">
-                        <span class="story-marker" aria-hidden="true"></span>
-                        <img class="story-photo" src="memories/Snapchat-958309122.jpg" alt="A little keepsake from our memories" loading="lazy">
-                        <div class="story-copy">
-                            <h3>Finding our way back</h3>
-                            <p>Now there's a new chapter to write—and I'm so glad we're here for it.</p>
-                        </div>
-                    </article>
+                <div class="hearts-box" aria-hidden="true">💕🤗🎀</div>
+                <h2 class="stage-heading" id="story-title">My Lovely Cutiepie 💕</h2>
+                <p class="cutiepie-intro">A little collection of my favorite pictures of you. Every smile makes my heart a little happier 🤗🎀</p>
+                <div class="photo-grid cutiepie-grid">
+                    <figure class="photo-frame cutiepie-card">
+                        <span class="cutiepie-heart" aria-hidden="true">💗</span>
+                        <img class="photo-item cutiepie-photo" src="memories/cutiepie-1.jpg" alt="Pic 1, my lovely cutiepie in a peach and blue outfit" loading="lazy">
+                        <figcaption class="photo-caption cutiepie-caption">Pic 1 💕</figcaption>
+                    </figure>
+                    <figure class="photo-frame cutiepie-card">
+                        <span class="cutiepie-heart" aria-hidden="true">💖</span>
+                        <img class="photo-item cutiepie-photo" src="memories/cutiepie-2.jpg" alt="Pic 2, my lovely cutiepie in a blue outfit" loading="lazy">
+                        <figcaption class="photo-caption cutiepie-caption">Pic 2 🤗</figcaption>
+                    </figure>
+                    <figure class="photo-frame cutiepie-card">
+                        <span class="cutiepie-heart" aria-hidden="true">💝</span>
+                        <img class="photo-item cutiepie-photo" src="memories/cutiepie-3.jpg" alt="Pic 3, my lovely cutiepie among pink flowers" loading="lazy">
+                        <figcaption class="photo-caption cutiepie-caption">Pic 3 🎀</figcaption>
+                    </figure>
+                    <figure class="photo-frame cutiepie-card">
+                        <span class="cutiepie-heart" aria-hidden="true">💗</span>
+                        <img class="photo-item cutiepie-photo" src="memories/cutiepie-4.jpg" alt="Pic 4, a smiling portrait of my lovely cutiepie" loading="lazy">
+                        <figcaption class="photo-caption cutiepie-caption">Pic 4 💞</figcaption>
+                    </figure>
                 </div>
-                <button class="celebrate-btn forward-button" id="to-memories" type="button">Keep going to our song &amp; pictures 🎵</button>
+                <button class="celebrate-btn forward-button" id="to-memories" type="button">Next up: our song &amp; memories 🎵</button>
             </section>
 
             <section class="stage-section" id="memories-stage" aria-labelledby="memories-title" hidden>

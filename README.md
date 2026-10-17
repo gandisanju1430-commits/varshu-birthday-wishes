@@ -23,4 +23,4 @@ Create a GitHub repository for this project and push the project files to its `m
 
 - Replace the photos and video in `public/memories/`, the gift images in `public/gifts/`, and `public/cake-surprise.jpg` with the images you want to share.
 - Gift choices open WhatsApp with a prefilled message. The selected gift image downloads separately and must be attached manually in WhatsApp.
-- The “Three Years Apart” chapter uses the local memory photos in `public/memories/`. Add real milestone dates to its timeline in `public/index.html` when you have them; no dates are guessed.
+- The “My Lovely Cutiepie” page uses the four portrait photos in `public/memories/cutiepie-1.jpg` through `cutiepie-4.jpg`; the memories gallery also includes the other photos and video.
