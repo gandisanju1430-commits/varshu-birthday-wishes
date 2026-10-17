@@ -24,3 +24,5 @@ Create a GitHub repository for this project and push the project files to its `m
 - Replace the photos and video in `public/memories/`, the gift images in `public/gifts/`, and `public/cake-surprise.jpg` with the images you want to share.
 - Gift choices open WhatsApp with a prefilled message. The selected gift image downloads separately and must be attached manually in WhatsApp.
 - The “My Lovely Cutiepie” page uses the four portrait photos in `public/memories/cutiepie-1.jpg` through `cutiepie-4.jpg`; the memories gallery also includes the other photos and video.
+- The cinematic ending uses `public/ending-photo.png` as its background image.
+- After the birthday-date gate, drag the bow onto the heart to reveal the birthday celebration; keyboard users can focus the bow and aim with the arrow keys.
