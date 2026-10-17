@@ -91,21 +91,18 @@
         .stage-heading { margin: 0 0 18px; color: #c83f60; font-size: clamp(1.35rem, 5vw, 1.8rem); }
         .forward-button { margin-top: 24px; }
         .music-status { min-height: 1.5em; margin: 10px 0 0; color: #79505e; font-size: .85rem; }
-        .photo-grid { max-width: 620px; margin: 0 auto; }
-        .photo-frame { position: relative; overflow: hidden; border-radius: 16px; }
-        .photo-item { display: block; height: clamp(140px, 30vw, 220px); }
+        .photo-grid { max-width: 680px; margin: 0 auto; }
+        .photo-frame { position: relative; overflow: hidden; margin: 0; border: 1px solid rgba(255,255,255,.85); border-radius: 16px; background: rgba(255,255,255,.78); box-shadow: 0 8px 24px rgba(174,67,100,.08); }
+        .photo-item { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; border: 3px solid #fff; background: #f8c4d1; object-fit: contain; }
         .photo-caption {
-            position: absolute;
-            right: 8px;
-            bottom: 8px;
-            left: 8px;
-            padding: 6px 8px;
-            border-radius: 9px;
-            background: rgba(255,255,255,.84);
+            display: block;
+            padding: 10px 8px;
             color: #79505e;
             font-size: .75rem;
             font-weight: 600;
+            text-align: center;
         }
+        .memory-video { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; background: #1a1625; object-fit: contain; }
 
         .wish-card {
             max-width: 620px;
@@ -168,9 +165,8 @@
         .celebrate-btn:focus-visible { outline: 3px solid #9b3450; outline-offset: 3px; }
 
         .photo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
-        .photo-item { width: 100%; border: 3px solid #fff; background: #f8c4d1; box-shadow: 0 5px 14px rgba(83, 39, 53, 0.1); object-fit: cover; transition: transform 220ms ease; }
-        .photo-frame:nth-child(-n + 2) .photo-item { object-position: center 18%; }
-        .photo-item:hover { transform: scale(1.035) rotate(-1deg); }
+        .photo-item { transition: transform 220ms ease; }
+        .photo-frame .photo-item:hover { transform: scale(1.015); }
 
         .gift-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; max-width: 620px; margin: 0 auto; }
         .gift-card { overflow: hidden; border: 1px solid rgba(255,255,255,.85); border-radius: 18px; background: rgba(255,255,255,.78); box-shadow: 0 8px 24px rgba(174,67,100,.1); }
@@ -199,7 +195,7 @@
         .story-timeline::before { position: absolute; top: 28px; bottom: 28px; left: 22px; width: 2px; background: linear-gradient(#e98ba1, #bd7899); content: ""; }
         .story-moment { position: relative; display: grid; grid-template-columns: 46px 92px minmax(0, 1fr); align-items: center; gap: 14px; padding: 12px; border: 1px solid rgba(255,255,255,.85); border-radius: 17px; background: rgba(255,255,255,.72); box-shadow: 0 8px 24px rgba(174,67,100,.08); }
         .story-marker { z-index: 1; display: grid; width: 22px; height: 22px; margin: auto; place-items: center; border: 4px solid #fff; border-radius: 50%; background: #d94e71; box-shadow: 0 0 0 2px #eaa0b2; }
-        .story-photo { display: block; width: 92px; height: 82px; border-radius: 11px; object-fit: cover; }
+        .story-photo { display: block; width: 92px; height: 138px; border: 2px solid #fff; border-radius: 11px; background: #f8c4d1; object-fit: contain; }
         .story-copy { min-width: 0; }
         .story-copy h3 { margin: 0 0 5px; color: #a33a58; font-size: .98rem; }
         .story-copy p { margin: 0; color: #715861; font-size: .86rem; line-height: 1.65; }
@@ -234,7 +230,7 @@
             background-image:
                 radial-gradient(ellipse at 50% 110%, rgba(133,74,133,.36), transparent 60%),
                 linear-gradient(180deg, rgba(8,10,29,.70), rgba(13,13,37,.82)),
-                url("memories/photo-4.png");
+                url("memories/Snapchat-618683686.jpg");
             background-position: center;
             background-size: cover;
             color: #fff8fb;
@@ -273,15 +269,19 @@
             body { padding: 16px 10px; }
             .main-card { padding: 24px 15px; }
             .main-card { margin-top: 1vh; }
-            .photo-item { height: 130px; }
-            .photo-caption { font-size: .68rem; }
+            .photo-item, .memory-video { aspect-ratio: 9 / 16; }
+            .photo-caption { padding: 8px 6px; font-size: .68rem; }
             .story-moment { grid-template-columns: 28px 62px minmax(0, 1fr); gap: 8px; padding: 8px; }
             .story-timeline::before { left: 14px; }
             .story-marker { width: 18px; height: 18px; }
-            .story-photo { width: 62px; height: 66px; }
+            .story-photo { width: 62px; height: 94px; }
             .story-copy h3 { font-size: .88rem; }
             .story-copy p { font-size: .77rem; }
             .ending-stage { padding: 20px; }
+        }
+
+        @media (min-width: 620px) {
+            .photo-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -333,7 +333,7 @@
                 <div class="story-timeline">
                     <article class="story-moment">
                         <span class="story-marker" aria-hidden="true"></span>
-                        <img class="story-photo" src="memories/photo-1.png" alt="A personal photo from our memories" loading="lazy">
+                        <img class="story-photo" src="memories/Snapchat-1286250603.jpg" alt="A personal memory together" loading="lazy">
                         <div class="story-copy">
                             <h3>When we met</h3>
                             <p>One hello became the beginning of a friendship I still hold close.</p>
@@ -341,7 +341,7 @@
                     </article>
                     <article class="story-moment">
                         <span class="story-marker" aria-hidden="true"></span>
-                        <img class="story-photo" src="memories/photo-2.png" alt="A personal photo from our time together" loading="lazy">
+                        <img class="story-photo" src="memories/Snapchat-618683686.jpg" alt="A personal memory together" loading="lazy">
                         <div class="story-copy">
                             <h3>Our memories</h3>
                             <p>Little jokes, familiar smiles, and ordinary days that turned into favorite stories.</p>
@@ -349,7 +349,7 @@
                     </article>
                     <article class="story-moment">
                         <span class="story-marker" aria-hidden="true"></span>
-                        <img class="story-photo" src="memories/photo-3.png" alt="A personal photo from our shared memories" loading="lazy">
+                        <img class="story-photo" src="memories/Snapchat-471866539.jpg" alt="A little keepsake from our memories" loading="lazy">
                         <div class="story-copy">
                             <h3>The silence</h3>
                             <p>Life took us in different directions for a while. Three years passed, but the good memories stayed.</p>
@@ -358,7 +358,7 @@
                     </article>
                     <article class="story-moment">
                         <span class="story-marker" aria-hidden="true"></span>
-                        <img class="story-photo" src="memories/photo-4.png" alt="A personal photo marking a new chapter" loading="lazy">
+                        <img class="story-photo" src="memories/Snapchat-958309122.jpg" alt="A little keepsake from our memories" loading="lazy">
                         <div class="story-copy">
                             <h3>Finding our way back</h3>
                             <p>Now there's a new chapter to write—and I'm so glad we're here for it.</p>
@@ -383,10 +383,18 @@
                     <p>One more wish: May this year bring you sweet surprises, big smiles, and plenty of reasons to stay close to your favorite person (me, obviously 🤭💕).</p>
                 </div>
                 <div class="photo-grid">
-                    <div class="photo-frame"><img src="memories/photo-1.png" alt="A favorite memory together" class="photo-item" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&amp;fit=crop&amp;w=600&amp;q=80'"><span class="photo-caption">A day to remember ✨</span></div>
-                    <div class="photo-frame"><img src="memories/photo-2.png" alt="A happy moment with my bestie" class="photo-item" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&amp;fit=crop&amp;w=600&amp;q=80'"><span class="photo-caption">My favorite person 💕</span></div>
-                    <div class="photo-frame"><img src="memories/photo-3.png" alt="A lovely memory with my best friend" class="photo-item" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&amp;fit=crop&amp;w=600&amp;q=80'"><span class="photo-caption">Always making me smile 😊</span></div>
-                    <div class="photo-frame"><img src="memories/photo-4.png" alt="A special day together" class="photo-item" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&amp;fit=crop&amp;w=600&amp;q=80'"><span class="photo-caption">More memories to come 🌸</span></div>
+                    <figure class="photo-frame"><img src="memories/Snapchat-1286250603.jpg" alt="A photo with friends at a celebration" class="photo-item" loading="lazy"><figcaption class="photo-caption">A day to remember ✨</figcaption></figure>
+                    <figure class="photo-frame"><img src="memories/Snapchat-471866539.jpg" alt="A handwritten keepsake" class="photo-item" loading="lazy"><figcaption class="photo-caption">A little keepsake 💗</figcaption></figure>
+                    <figure class="photo-frame"><img src="memories/Snapchat-618683686.jpg" alt="A happy photo with friends" class="photo-item" loading="lazy"><figcaption class="photo-caption">Our favorite people 🫶</figcaption></figure>
+                    <figure class="photo-frame"><img src="memories/Snapchat-819046273.jpg" alt="A handwritten memory" class="photo-item" loading="lazy"><figcaption class="photo-caption">A doodle to remember ✍️</figcaption></figure>
+                    <figure class="photo-frame"><img src="memories/Snapchat-958309122.jpg" alt="A handwritten keepsake" class="photo-item" loading="lazy"><figcaption class="photo-caption">Sweet little memories 💕</figcaption></figure>
+                    <figure class="photo-frame">
+                        <video class="memory-video" controls playsinline preload="metadata" poster="memories/Snapchat-618683686.jpg" aria-label="A video from our memories">
+                            <source src="memories/Snapchat-1562052584.mp4" type="video/mp4">
+                            Your browser can't play this video. <a href="memories/Snapchat-1562052584.mp4">Open the video directly</a>.
+                        </video>
+                        <figcaption class="photo-caption">A little moment together 🎬</figcaption>
+                    </figure>
                 </div>
                 <button class="celebrate-btn forward-button" id="to-more" type="button">Move forward for one more surprise 💌</button>
             </section>

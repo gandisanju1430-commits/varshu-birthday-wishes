@@ -1,17 +1,12 @@
-# Add your own birthday pictures here
+# Our memories
 
-Place your personal photos in this folder with the same names used by the page:
+The birthday page uses these personal photos and video in the story timeline and memories gallery:
 
-- photo-1.png
-- photo-2.png
-- photo-3.png
-- photo-4.png
+- `Snapchat-1286250603.jpg`
+- `Snapchat-471866539.jpg`
+- `Snapchat-618683686.jpg`
+- `Snapchat-819046273.jpg`
+- `Snapchat-958309122.jpg`
+- `Snapchat-1562052584.mp4`
 
-You can also use .png or .webp files if you prefer.
-
-Example:
-
-- public/memories/photo-1.png
-- public/memories/photo-2.png
-
-The site will automatically show the local image if it exists, and the fallback Unsplash images will appear if a file is missing.
+Photos keep their full portrait framing in the gallery. The video is included with playback controls.
